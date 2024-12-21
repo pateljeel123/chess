@@ -9,8 +9,8 @@ function App() {
   const [gameOver, setGameOver] = useState(false);
   const [winner, setWinner] = useState(null);
   const [preMove, setPreMove] = useState(null);
-  const [highlightSquares, setHighlightSquares] = useState([]); // Highlight squares
-  const audioRef = useRef(null); // Reference for the audio element
+  const [highlightSquares, setHighlightSquares] = useState([]);
+  const audioRef = useRef(null);
 
   function safeGameMutate(modify) {
     setGame((g) => {
@@ -28,11 +28,11 @@ function App() {
       move = game.move({
         from: source,
         to: target,
-        promotion: "q", // Default promotion to queen
+        promotion: "q",
       });
     });
 
-    setHighlightSquares([]); // Clear highlights after move
+    setHighlightSquares([]);
 
     if (move === null) {
       if (game.turn() !== move?.color) {
@@ -45,7 +45,7 @@ function App() {
     setMoveHistory([...moveHistory, move.san]);
 
     if (game.game_over()) {
-      handleGameOver(move.color);
+      handleGameOver();
       return true;
     }
 
@@ -77,7 +77,7 @@ function App() {
     setPreMove(null);
 
     if (game.game_over()) {
-      handleGameOver(move.color);
+      handleGameOver();
     }
   }
 
@@ -96,14 +96,23 @@ function App() {
     if (preMove) executePreMove();
 
     if (game.game_over()) {
-      handleGameOver(game.turn());
+      handleGameOver();
     }
   }
 
-  function handleGameOver(lastTurnColor) {
+  function handleGameOver() {
     setGameOver(true);
-    setWinner(lastTurnColor === "w" ? "Black" : "White");
-    if (audioRef.current) audioRef.current.pause(); // Stop music when game is over
+
+    if (game.in_checkmate()) {
+      // If checkmate, the loser is the current turn player
+      setWinner(game.turn() === "w" ? "Black" : "White");
+    } else if (game.in_stalemate() || game.in_draw()) {
+      setWinner("Draw");
+    } else {
+      setWinner("Unknown");
+    }
+
+    if (audioRef.current) audioRef.current.pause();
   }
 
   function resetGame() {
@@ -112,8 +121,8 @@ function App() {
     setGameOver(false);
     setWinner(null);
     setPreMove(null);
-    setHighlightSquares([]); // Clear highlights when resetting
-    if (audioRef.current) audioRef.current.play(); // Restart music when the game resets
+    setHighlightSquares([]);
+    if (audioRef.current) audioRef.current.play();
   }
 
   function highlightLegalMoves(square) {
@@ -124,19 +133,17 @@ function App() {
     setHighlightSquares(squaresToHighlight);
   }
 
-  // Custom function for highlighting
   function customSquareStyles() {
     const styles = {};
     highlightSquares.forEach((sq) => {
       styles[sq] = {
-        backgroundColor: "rgba(0, 255, 0, 0.5)", // Green highlight
-        borderRadius: "50%", // Circular highlight
+        backgroundColor: "rgba(0, 255, 0, 0.5)",
+        borderRadius: "50%",
       };
     });
     return styles;
   }
 
-  // Play music when the mode changes
   useEffect(() => {
     if (audioRef.current) {
       audioRef.current.play();
@@ -145,8 +152,7 @@ function App() {
 
   return (
     <div className="app">
-      <audio ref={audioRef} src="/path-to-your-audio-file/background.mp3" loop /> {/* Add your audio file path */}
-
+      <audio ref={audioRef} src="/path-to-your-audio-file/background.mp3" loop />
       <div className="header">
         <h1>Chess Game</h1>
         <div className="controls">
@@ -162,7 +168,9 @@ function App() {
         <div className="game-over-card">
           <h2>Game Over!</h2>
           <p>
-            Winner: <strong>{winner}</strong>
+            {winner === "Draw"
+              ? "The game ended in a draw!"
+              : `Winner: ${winner}`}
           </p>
           <button onClick={resetGame} className="new-game-btn">
             Start New Match
@@ -174,8 +182,8 @@ function App() {
         <Chessboard
           position={game.fen()}
           onPieceDrop={onDrop}
-          onSquareClick={highlightLegalMoves} // Highlight on square click
-          customSquareStyles={customSquareStyles()} // Apply custom styles
+          onSquareClick={highlightLegalMoves}
+          customSquareStyles={customSquareStyles()}
           className="chessboard"
         />
         <div className="info-panel">
