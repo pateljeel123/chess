@@ -151,12 +151,37 @@ button:hover {
 /* Responsive Design */
 @media (max-width: 768px) {
   .chessboard-container {
+    margin-left: 18%;
     flex-direction: column;
     align-items: center;
   }
 
+  .header {
+    margin-left: 85px;
+  }
   .info-panel {
     width: 100%;
     margin-top: 20px;
+  }
+}
+/* Default styles for larger screens */
+.chessboard {
+  width: 500px;  /* Default width for larger screens */
+  height: 500px; /* Default height for larger screens */
+}
+
+/* Make chessboard smaller on devices with screen width 600px or less */
+@media (max-width: 600px) {
+  .chessboard {
+    width: 300px;  /* Smaller width for mobile */
+    height: 300px; /* Smaller height for mobile */
+  }
+}
+
+/* Make chessboard even smaller for devices with screen width 320px or less */
+@media (max-width: 320px) {
+  .chessboard {
+    width: 200px;  /* Even smaller width for very small screens */
+    height: 200px; /* Even smaller height for very small screens */
   }
 }

@@ -1,6 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import  { useState, useRef, useEffect } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
+import "./App.css"
 
 function App() {
   const [game, setGame] = useState(new Chess());

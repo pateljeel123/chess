@@ -148,6 +148,154 @@ button:hover {
   border-radius: 50% !important;
 }
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  font-family: 'Inter', sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* Main App Styling */
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Header Styling */
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.header h1 {
+  font-size: 2rem;
+  color: #1f7a8c;
+  margin-bottom: 10px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+button {
+  background-color: #1f7a8c;
+  color: white;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  font-weight: bold;
+}
+
+button:hover {
+  background-color: #135a6b;
+}
+
+/* Chessboard Container */
+.chessboard-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%; /* Ensure it adapts to screen width */
+  max-width: 100%; /* Prevent overflow */
+}
+
+.chessboard {
+  border: 3px solid #dfe4ea;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: calc(100vw - 40px); /* Responsive width */
+  max-width: 320px; /* Limit size for larger screens */
+  aspect-ratio: 1 / 1; /* Maintain square shape */
+  box-sizing: border-box; /* Include padding and borders */
+}
+
+/* Info Panel Styling */
+.info-panel {
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-panel h3 {
+  font-size: 1.2rem;
+  color: #1f7a8c;
+  margin-bottom: 10px;
+}
+
+.info-panel p {
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  color: #4b4b4b;
+}
+
+/* Move History */
+.move-history {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 10px;
+  border-left: 3px solid #e0e0e0;
+}
+
+.move-history div {
+  padding: 5px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Game Over Modal */
+.game-over-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  margin-top: 20px;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.new-game-btn {
+  background-color: #e63946;
+  color: white;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.new-game-btn:hover {
+  background-color: #d62828;
+}
+
+/* Highlight Legal Moves */
+.square-highlight {
+  background-color: rgba(50, 168, 82, 0.6) !important;
+  border-radius: 50% !important;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .chessboard-container {
@@ -156,7 +304,73 @@ button:hover {
   }
 
   .info-panel {
-    width: 100%;
     margin-top: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .controls {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .info-panel {
+    padding: 10px;
+  }
+
+  .move-history {
+    max-height: 150px;
+  }
+}
+
+@media (max-width: 320px) {
+  .chessboard {
+    width: calc(100vw - 20px); /* Adjust width for very small screens */
+  }
+
+  .info-panel {
+    padding: 10px;
+  }
+
+  .move-history {
+    max-height: 120px; /* Further reduced height */
+  }
+}
+/* Default styles for larger screens */
+.chessboard {
+  width: 500px;  /* Default width for larger screens */
+  height: 500px; /* Default height for larger screens */
+}
+
+/* Make chessboard smaller on mobile */
+@media (max-width: 600px) {
+  .chessboard {
+    width: 300px;  /* Smaller width for mobile */
+    height: 300px; /* Smaller height for mobile */
+  }
+}
+/* Default styles for larger screens */
+.chessboard {
+  width: 500px;  /* Default width for larger screens */
+  height: 500px; /* Default height for larger screens */
+}
+
+/* Make chessboard smaller on devices with screen width 600px or less */
+@media (max-width: 600px) {
+  .chessboard {
+    width: 300px;  /* Smaller width for mobile */
+    height: 300px; /* Smaller height for mobile */
+  }
+}
+
+/* Make chessboard even smaller for devices with screen width 320px or less */
+@media (max-width: 320px) {
+  .chessboard {
+    width: 200px;  /* Even smaller width for very small screens */
+    height: 200px; /* Even smaller height for very small screens */
   }
 }
