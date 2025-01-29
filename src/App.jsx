@@ -1,7 +1,7 @@
-import  { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Chessboard } from "react-chessboard";
 import { Chess } from "chess.js";
-import "./App.css"
+import "./App.css";
 
 function App() {
   const [game, setGame] = useState(new Chess());
@@ -11,7 +11,18 @@ function App() {
   const [winner, setWinner] = useState(null);
   const [preMove, setPreMove] = useState(null);
   const [highlightSquares, setHighlightSquares] = useState([]);
+  const [isMobile, setIsMobile] = useState(false);
   const audioRef = useRef(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   function safeGameMutate(modify) {
     setGame((g) => {
@@ -105,7 +116,6 @@ function App() {
     setGameOver(true);
 
     if (game.in_checkmate()) {
-      // If checkmate, the loser is the current turn player
       setWinner(game.turn() === "w" ? "Black" : "White");
     } else if (game.in_stalemate() || game.in_draw()) {
       setWinner("Draw");
@@ -151,6 +161,28 @@ function App() {
     }
   }, [mode]);
 
+  if (isMobile) {
+    return (
+      <div
+        className="mobile-warning"
+        style={{
+          backgroundColor: "black",
+          color: "white",
+          height: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          textAlign: "center",
+        }}
+      >
+        <h2>
+          This site is not available for mobile devices. <br /> Please use a
+          larger screen.
+        </h2>
+      </div>
+    );
+  }
+
   return (
     <div className="app">
       <audio ref={audioRef} src="/path-to-your-audio-file/background.mp3" loop />
@@ -168,11 +200,7 @@ function App() {
       {gameOver && (
         <div className="game-over-card">
           <h2>Game Over!</h2>
-          <p>
-            {winner === "Draw"
-              ? "The game ended in a draw!"
-              : `Winner: ${winner}`}
-          </p>
+          <p>{winner === "Draw" ? "The game ended in a draw!" : `Winner: ${winner}`}</p>
           <button onClick={resetGame} className="new-game-btn">
             Start New Match
           </button>
@@ -205,6 +233,7 @@ function App() {
             </p>
           )}
           <h3>Move History</h3>
+
           <div className="move-history">
             {moveHistory.map((move, index) => (
               <div key={index}>
